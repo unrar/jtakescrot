@@ -10,13 +10,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.net.URL;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Joska
- * Date: 31/08/13
- * Time: 21:29
- * To change this template use File | Settings | File Templates.
- */
 
 public class JTakeScrot {
 
@@ -67,7 +60,23 @@ public class JTakeScrot {
     }
 
     public static void main(String[] args) {
+
+        // If tray icon is NOT supported:
+        if (!SystemTray.isSupported()) {
+            // Notice
+            System.out.println("Tray icons are not supported in this platform. A screenshot is going to be taken now.");
+            // Try and take a screenshot
+            try {
+                takeScreenshot();
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            // Exit
+            System.out.println("Thanks for using JTakeScrot!");
+            System.exit(0);
+        }
         // Create the tray icon
+
         final PopupMenu popup = new PopupMenu();
         final TrayIcon trayIcon =
                 new TrayIcon(createImage("images/bulb.gif", "JTakeScrot"));
@@ -92,7 +101,7 @@ public class JTakeScrot {
                 try {
                     takeScreenshot();
                 } catch (Exception e1) {
-                    e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    e1.printStackTrace();
                 }
             }
         });
@@ -114,18 +123,8 @@ public class JTakeScrot {
             }
 
             String extension = Utils.getExtension(f);
-            if (extension != null) {
-                if (extension.equals(Utils.gif) ||
-                        extension.equals(Utils.jpeg) ||
-                        extension.equals(Utils.jpg) ||
-                        extension.equals(Utils.png)) {
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+            return extension != null && (extension.equals(Utils.gif) || extension.equals(Utils.jpeg) || extension.equals(Utils.jpg) || extension.equals(Utils.png));
 
-            return false;
         }
 
         //The description of this filter
@@ -139,9 +138,7 @@ public class JTakeScrot {
     public final static String jpeg = "jpeg";
     public final static String jpg = "jpg";
     public final static String gif = "gif";
-    public final static String tiff = "tiff";
-    public final static String tif = "tif";
-    public final static String png = "png";
+     public final static String png = "png";
 
     /*
      * Get the extension of a file.
